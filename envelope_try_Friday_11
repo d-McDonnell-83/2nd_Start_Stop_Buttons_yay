@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset = "UTF-8">
+    <title> Start Stop Fun</title>
+    </head>
+    <body>
+        <button id = "Start1">Start</button>
+        <button id = "Stop1">Stop</button>
+        <button id = "Start2">Start</button>
+        <button id = "Stop2">Stop</button>
+        <button id = "Start3">Start</button>
+        <button id = "Stop3">Stop</button>
+    <script>
+
+  const startTone = function(ctx, freq, duration) 
+  {
+  const osc = new OscillatorNode(ctx, { frequency: freq });
+  const gain = new GainNode(ctx, { gain: 0.0 }); // start silent
+  osc.connect(gain).connect(ctx.destination);
+
+  const now = ctx.currentTime;
+
+  gain.gain.setValueAtTime(0.0, now);
+  gain.gain.linearRampToValueAtTime(0.2, now + 0.02); // 20 ms fade-in
+
+  osc.start(now);
+  osc.stop(now + duration);
+
+  return { osc, gain };
+};
+    </script>
+    
+    </body>
+</html>
