@@ -2,33 +2,50 @@
 <html lang="en">
 <head>
     <meta charset = "UTF-8">
-    <title> Start Stop Fun</title>
+    <title> Envelope A</title>
     </head>
     <body>
-        <button id = "Start1">Start</button>
-        <button id = "Stop1">Stop</button>
-        <button id = "Start2">Start</button>
-        <button id = "Stop2">Stop</button>
-        <button id = "Start3">Start</button>
-        <button id = "Stop3">Stop</button>
+        <button id = "swellButton">Click Me!</button>
+    <div id = "gainArea">
+        <label for="masterSlider">Master Gain</label>
+        <input type="range" id="masterSlider" min = "-70" max = "6" value="-70">
+        <label for = "masterSlider" id="gainValue">-70.0 dBFS</label>
+        </div>
+
     <script>
 
-  const startTone = function(ctx, freq, duration) 
-  {
-  const osc = new OscillatorNode(ctx, { frequency: freq });
-  const gain = new GainNode(ctx, { gain: 0.0 }); // start silent
-  osc.connect(gain).connect(ctx.destination);
+        const adsrSwell = function ()
+        {
+            anOscillator.frequency.value = Math.random() * 200 + 100;
 
-  const now = ctx.currentTime;
+            mySuperSpecialAudio.resume();
 
-  gain.gain.setValueAtTime(0.0, now);
-  gain.gain.linearRampToValueAtTime(0.2, now + 0.02); // 20 ms fade-in
+            let now = mySuperSpecialAudio.currentTime;
 
-  osc.start(now);
-  osc.stop(now + duration);
+            adsr.gain.setValueAtTime(0, now);
+            adsr.gain.linearRampToValueAtTime(1, now + 1.5);
+            adar.gain.linearRampToValueAtTime(0, now + 3);
 
-  return { osc, gain };
-};
+    };
+
+    const mySuperSpecialAudio = new AudioContext();
+
+    const anOscillator = new OscillatorNode(mySuperSpecialAudio);
+
+    const adsr = new GainNode(mySuperSpecialAudio);
+    adsr.gain.value = 0;
+
+    const master = new GainNode(mySuperSpecialAudio);
+
+    anOscillator.connect(adsr);
+    adsr.connect(master);
+    master.connect(mySuperSpecialAudio.destination);
+
+    anOscillator.start();
+
+    const theClickButton = document.querySelector("#swellButton");
+
+    theClickButton.addEventListener("click", adsrSwell);
     </script>
     
     </body>
